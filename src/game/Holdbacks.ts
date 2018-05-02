@@ -13,17 +13,16 @@ export default class Holdbacks extends Hilo.Container {
 
   public passThrough: number = 0; // 穿过的管子的数量，也即移出屏幕左侧的管子的数量
 
-  private moveTween: Hilo.Tween;
+  public moveTween: Hilo.Tween;
 
-  constructor(properties: any) {
+  constructor(properties) {
     super(properties);
-
     merge(this, properties);
 
     // 管子之间的水平间隔
     this.hoseSpacingX = 300;
     // 上下管子之间的垂直间隔，即小鸟要穿越的空间大小
-    this.hoseSpacingY = 240;
+    this.hoseSpacingY = 290;
     // 管子的总数（上下一对管子算一个）
     this.numHoses = 4;
     // 移出屏幕左侧的管子数量，一般设置为管子总数的一半
@@ -37,49 +36,51 @@ export default class Holdbacks extends Hilo.Container {
 
     this.reset();
     this.createHoses(properties.image);
-    this.moveTween = new Hilo.Tween(
-      this,
-      {},
-      {
-        onComplete: this.resetHoses.bind(this),
-      },
-      {}
-    );
+    // this.moveTween = new Hilo.Tween(
+    //   this,
+    //   {},
+    //   {},
+    //   {
+    //     onComplete: this.resetHoses.bind(this),
+    //   }
+    // );
   }
 
   public createHoses(image) {
-    for (let i = 0; i < this.numHoses; i++) {
+    for (let i = 0; i < this.numHoses; i += 1) {
       const downHose = new Hilo.Bitmap({
-        boundsArea: [
-          { x: 8, y: 0 },
-          { x: 140, y: 0 },
-          { x: 140, y: 60 },
-          { x: 136, y: 60 },
-          { x: 136, y: 820 },
-          { x: 14, y: 820 },
-          { x: 14, y: 60 },
-          { x: 8, y: 60 },
-        ],
-        id: 'down' + i,
         image,
         rect: [0, 0, 148, 820],
-      } as any).addTo(this);
+      });
+      downHose.id = 'down' + i;
+      downHose.boundsArea = [
+        { x: 8, y: 0 },
+        { x: 140, y: 0 },
+        { x: 140, y: 60 },
+        { x: 136, y: 60 },
+        { x: 136, y: 820 },
+        { x: 14, y: 820 },
+        { x: 14, y: 60 },
+        { x: 8, y: 60 },
+      ];
+      downHose.addTo(this);
 
       const upHose = new Hilo.Bitmap({
-        boundsArea: [
-          { x: 14, y: 0 },
-          { x: 140, y: 0 },
-          { x: 140, y: 820 - 60 },
-          { x: 144, y: 820 - 60 },
-          { x: 144, y: 820 },
-          { x: 8, y: 820 },
-          { x: 8, y: 820 - 60 },
-          { x: 14, y: 820 - 60 },
-        ],
-        id: 'up' + i,
         image,
         rect: [148, 0, 148, 820],
-      } as any).addTo(this);
+      });
+      upHose.id = 'up' + i;
+      upHose.boundsArea = [
+        { x: 14, y: 0 },
+        { x: 140, y: 0 },
+        { x: 140, y: 820 - 60 },
+        { x: 144, y: 820 - 60 },
+        { x: 144, y: 820 },
+        { x: 8, y: 820 },
+        { x: 8, y: 820 - 60 },
+        { x: 14, y: 820 - 60 },
+      ];
+      upHose.addTo(this);
 
       this.placeHose(downHose, upHose, i);
     }
@@ -99,13 +100,12 @@ export default class Holdbacks extends Hilo.Container {
   }
 
   public resetHoses() {
-    const total = this.getNumChildren();
+    const total = this.children.length;
 
     // 把已移出屏幕外的管子放到队列最后面，并重置它们的可穿越位置
     for (let i = 0; i < this.numOffscreenHoses; i++) {
       const downHose = this.getChildAt(0);
       const upHose = this.getChildAt(1);
-
       this.setChildIndex(downHose, total - 1);
       this.setChildIndex(upHose, total - 1);
       this.placeHose(downHose, upHose, this.numOffscreenHoses + i);
@@ -125,17 +125,29 @@ export default class Holdbacks extends Hilo.Container {
 
     // 继续移动
     this.startMove();
+    // Hilo.Tween.add(this.moveTween);
   }
 
   public startMove() {
+    const moveTween = new Hilo.Tween(
+      this,
+      {},
+      {},
+      {
+        onComplete: this.resetHoses.bind(this),
+      }
+    );
+
     // 设置缓动的x轴坐标
     const targetX = -this.hoseWidth * this.numOffscreenHoses;
     // 设置缓动时间
-    this.moveTween.duration = (this.x - targetX) * 4;
+    moveTween.duration = (this.x - targetX) * 4;
     // 设置缓动的变换属性，即x从当前坐标变换到targetX
-    this.moveTween.setProps({ x: this.x }, { x: targetX });
+    moveTween.setProps({ x: this.x }, { x: targetX });
     // 启动缓动动画
-    this.moveTween.start();
+    moveTween.start();
+
+    this.moveTween = moveTween;
   }
 
   public stopMove() {
@@ -145,7 +157,7 @@ export default class Holdbacks extends Hilo.Container {
   }
 
   public checkCollision(bird) {
-    for (let i = 0, len = this.children.length; i < len; i++) {
+    for (let i = 0, len = this.children.length; i < len; i += 1) {
       if (bird.hitTestObject(this.children[i], true)) {
         return true;
       }

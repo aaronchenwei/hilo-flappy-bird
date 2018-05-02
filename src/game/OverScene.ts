@@ -2,14 +2,13 @@ import * as Hilo from 'hilojs';
 import merge from 'lodash-es/merge';
 
 export default class OverScene extends Hilo.Container {
-  constructor(properties?: object | undefined) {
+  constructor(properties) {
     super(properties);
-
     merge(this, properties);
     this.init(properties);
   }
 
-  public init(properties: any) {
+  public init(properties) {
     const board = new Hilo.Bitmap({
       id: 'board',
       image: properties.image,
@@ -54,11 +53,11 @@ export default class OverScene extends Hilo.Container {
 
     const whiteMask = new Hilo.View({
       alpha: 0.0,
+      background: '#fff',
       height: this.height,
       id: 'mask',
       width: this.width,
     });
-    whiteMask.background = '#fff' as any;
 
     board.x = (this.width - board.width) >> 1;
     board.y = (this.height - board.height) >> 1;
@@ -82,38 +81,55 @@ export default class OverScene extends Hilo.Container {
     this.addChild(whiteMask);
   }
 
-  public show(score: number, bestScore: number) {
+  public show(score: string, bestScore: string) {
     this.visible = true;
-    this.getChildById('score').text = String(score);
-    this.getChildById('best').text = String(bestScore);
-    this.getChildById('mask').alpha = 1.0;
+    (this.getChildById('score') as Hilo.BitmapText).setText(score);
+    (this.getChildById('best') as Hilo.BitmapText).setText(bestScore);
+    (this.getChildById('mask') as Hilo.View).alpha = 1;
 
-    Hilo.Tween.from(this.getChildById('gameover'), { alpha: 0 }, { time: 100 });
-    Hilo.Tween.from(
+    Hilo.Tween.to(
+      this.getChildById('gameover'),
+      { alpha: 1 },
+      { duration: 100 }
+    );
+    Hilo.Tween.to(
       this.getChildById('board'),
-      { alpha: 0, y: this.getChildById('board').y + 150 },
-      { time: 200, delay: 200 }
+      { alpha: 1, y: this.getChildById('board').y - 150 },
+      { duration: 200, delay: 200 }
     );
-    Hilo.Tween.from(
+    Hilo.Tween.to(
       this.getChildById('score'),
-      { alpha: 0, y: this.getChildById('score').y + 150 },
-      { time: 200, delay: 200 }
+      { alpha: 1, y: this.getChildById('score').y - 150 },
+      { duration: 200, delay: 200 }
     );
-    Hilo.Tween.from(
+    Hilo.Tween.to(
       this.getChildById('best'),
-      { alpha: 0, y: this.getChildById('best').y + 150 },
-      { time: 200, delay: 200 }
+      { alpha: 1, y: this.getChildById('best').y - 150 },
+      { duration: 200, delay: 200 }
     );
-    Hilo.Tween.from(
+    Hilo.Tween.to(
       this.getChildById('start'),
-      { alpha: 0 },
-      { time: 100, delay: 600 }
+      { alpha: 1 },
+      { duration: 100, delay: 600 }
     );
-    Hilo.Tween.from(
+    Hilo.Tween.to(
       this.getChildById('grade'),
-      { alpha: 0 },
-      { time: 100, delay: 600 }
+      { alpha: 1 },
+      { duration: 100, delay: 600 }
     );
-    Hilo.Tween.to(this.getChildById('mask'), { alpha: 0 }, { time: 400 });
+    Hilo.Tween.to(this.getChildById('mask'), { alpha: 0 }, { duration: 400 });
+  }
+
+  public hide() {
+    this.visible = false;
+    this.getChildById('gameover').alpha = 0;
+    this.getChildById('board').alpha = 0;
+    this.getChildById('score').alpha = 0;
+    this.getChildById('best').alpha = 0;
+    this.getChildById('start').alpha = 0;
+    this.getChildById('grade').alpha = 0;
+    this.getChildById('board').y += 150;
+    this.getChildById('score').y += 150;
+    this.getChildById('best').y += 150;
   }
 }

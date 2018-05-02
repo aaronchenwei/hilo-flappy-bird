@@ -2,14 +2,15 @@ import * as Hilo from 'hilojs';
 import merge from 'lodash-es/merge';
 
 export default class ReadyScene extends Hilo.Container {
-  constructor(properties?: object | undefined) {
+  constructor(properties) {
     super(properties);
 
     merge(this, properties);
+
     this.init(properties);
   }
 
-  public init(properties: any) {
+  public init(properties) {
     // 准备Get Ready!
     const getready = new Hilo.Bitmap({
       image: properties.image,
@@ -28,7 +29,7 @@ export default class ReadyScene extends Hilo.Container {
     getready.x = (this.width - getready.width) >> 1;
     getready.y = (tap.y - getready.height) >> 0;
 
-    this.addChild(getready);
     this.addChild(tap);
+    this.addChild(getready);
   }
 }

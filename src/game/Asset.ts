@@ -3,22 +3,22 @@ import EventMixin from 'hilojs/event/EventMixin';
 import mixin from 'lodash-es/mixin';
 
 export default class Asset implements Hilo.EventMixin {
-  public queue: Hilo.LoadQueue;
   public bg: object;
-  public ground: any;
-  public ready: any;
-  public over: any;
-  public numberGlyphs: any;
-  public birdAtlas: any;
-  public holdback: any;
+  public ground: object;
+  public ready: object;
+  public over: object;
+  public numberGlyphs;
+  public holdback: object;
+  public birdAtlas: Hilo.TextureAtlas;
+  public queue: Hilo.LoadQueue;
 
-  public fire: (type: string, detail: object) => boolean;
-  public off: (type: string, listener?: any | undefined) => object;
   public on: (
     type: string,
     listener: any,
     once?: boolean | undefined
   ) => object;
+  public off: (type: string, listener?: any | undefined) => object;
+  public fire: (type: string, detail: object) => boolean;
 
   constructor() {
     mixin(this, EventMixin);
@@ -41,7 +41,7 @@ export default class Asset implements Hilo.EventMixin {
     this.queue.start();
   }
 
-  public onComplete(e) {
+  public onComplete() {
     this.bg = this.queue.getContent('bg');
     this.ground = this.queue.getContent('ground');
     this.ready = this.queue.getContent('ready');
@@ -56,18 +56,18 @@ export default class Asset implements Hilo.EventMixin {
       },
     });
 
-    const numberImg = this.queue.getContent('number');
+    const numberImage = this.queue.getContent('number');
     this.numberGlyphs = {
-      0: { image: numberImg, rect: [0, 0, 60, 91] },
-      1: { image: numberImg, rect: [61, 0, 60, 91] },
-      2: { image: numberImg, rect: [121, 0, 60, 91] },
-      3: { image: numberImg, rect: [191, 0, 60, 91] },
-      4: { image: numberImg, rect: [261, 0, 60, 91] },
-      5: { image: numberImg, rect: [331, 0, 60, 91] },
-      6: { image: numberImg, rect: [401, 0, 60, 91] },
-      7: { image: numberImg, rect: [471, 0, 60, 91] },
-      8: { image: numberImg, rect: [541, 0, 60, 91] },
-      9: { image: numberImg, rect: [611, 0, 60, 91] },
+      0: { image: numberImage, rect: [0, 0, 60, 91] },
+      1: { image: numberImage, rect: [61, 0, 60, 91] },
+      2: { image: numberImage, rect: [121, 0, 60, 91] },
+      3: { image: numberImage, rect: [191, 0, 60, 91] },
+      4: { image: numberImage, rect: [261, 0, 60, 91] },
+      5: { image: numberImage, rect: [331, 0, 60, 91] },
+      6: { image: numberImage, rect: [401, 0, 60, 91] },
+      7: { image: numberImage, rect: [471, 0, 60, 91] },
+      8: { image: numberImage, rect: [541, 0, 60, 91] },
+      9: { image: numberImage, rect: [611, 0, 60, 91] },
     };
 
     this.queue.off('complete');

@@ -11,13 +11,12 @@ export default class Bird extends Hilo.Sprite {
 
   public isDead: boolean = true; // 小鸟是否已死亡
   public isUp: boolean = false; // 小鸟是在往上飞阶段，还是下落阶段
-
   public flyStartY: number = 0; // 小鸟往上飞的起始y轴坐标
   public flyStartTime: number = 0; // 小鸟飞行起始时间
 
-  private tween: any[] | Hilo.Tween;
+  public tween: any[] | Hilo.Tween;
 
-  constructor(properties: any) {
+  constructor(properties) {
     super(properties);
     merge(this, properties);
 
@@ -42,7 +41,7 @@ export default class Bird extends Hilo.Sprite {
     this.tween = Hilo.Tween.to(
       this,
       { y: this.y + 10, rotation: -8 },
-      { time: 400, reverse: true, loop: true }
+      { duration: 400, reverse: true, loop: true }
     );
   }
 
@@ -75,14 +74,14 @@ export default class Bird extends Hilo.Sprite {
       this.y = y;
       if (distance > 0 && !this.isUp) {
         // 往上飞时，角度上仰20度
-        this.tween = Hilo.Tween.to(this, { rotation: -20 }, { time: 200 });
+        this.tween = Hilo.Tween.to(this, { rotation: -20 }, { duration: 200 });
         this.isUp = true;
       } else if (distance < 0 && this.isUp) {
         // 往下跌落时，角度往下90度
         this.tween = Hilo.Tween.to(
           this,
           { rotation: 90 },
-          { time: this.groundY - this.y }
+          { duration: this.groundY - this.y }
         );
         this.isUp = false;
       }

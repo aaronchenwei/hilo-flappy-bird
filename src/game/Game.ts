@@ -1,4 +1,5 @@
 import * as Hilo from 'hilojs';
+
 import Asset from './Asset';
 import Bird from './Bird';
 import Holdbacks from './Holdbacks';
@@ -6,25 +7,26 @@ import OverScene from './OverScene';
 import ReadyScene from './ReadyScene';
 
 export default class Game {
-  public properties: any;
+  public properties: Hilo.IStageProperties;
+
   public width: number = 0;
   public height: number = 0;
-  public scale: number;
+  public scale: number = 1.0;
 
   public asset: Asset;
   public stage: Hilo.Stage;
   public ticker: Hilo.Ticker;
-  public state: string;
-  public score: number = 0;
-  public currentScore: Hilo.BitmapText;
-  public bg: null;
+  public state: string | null = null;
+  public score: number;
+
   public ground: Hilo.Bitmap;
+  public currentScore: Hilo.BitmapText;
   public bird: Bird;
   public holdbacks: Holdbacks;
   public gameReadyScene: ReadyScene;
   public gameOverScene: OverScene;
 
-  constructor(properties: any) {
+  constructor(properties: Hilo.IStageProperties) {
     this.properties = properties;
     this.init();
   }
@@ -164,6 +166,7 @@ export default class Game {
     // 准备场景
     this.gameReadyScene = new ReadyScene({
       height: this.height,
+      id: 'readyScene',
       image: this.asset.ready,
       width: this.width,
     });
@@ -183,8 +186,9 @@ export default class Game {
     this.gameOverScene
       .getChildById('start')
       .on((Hilo.event as Hilo.EventType).POINTER_START, e => {
-        e._stopped = true;
-        this.gameOverScene.visible = false;
+        if (e.stopImmediatePropagation) {
+          e.stopImmediatePropagation();
+        }
         this.gameReady();
       });
   }
@@ -217,10 +221,11 @@ export default class Game {
   }
 
   public gameReady() {
+    this.gameOverScene.hide();
     this.state = 'ready';
     this.score = 0;
     this.currentScore.visible = true;
-    this.currentScore.text = String(this.score);
+    this.currentScore.setText(String(this.score));
     this.gameReadyScene.visible = true;
     this.holdbacks.reset();
     this.bird.getReady();
@@ -243,13 +248,18 @@ export default class Game {
       // 隐藏屏幕中间显示的分数
       this.currentScore.visible = false;
       // 显示结束场景
-      this.gameOverScene.show(this.calcScore(), this.saveBestScore());
+      this.gameOverScene.show(
+        String(this.calcScore()),
+        String(this.saveBestScore())
+      );
     }
   }
 
   public calcScore() {
     const count = this.holdbacks.calcPassThrough(this.bird.x);
-    return (this.score = count);
+    this.score = count;
+
+    return this.score;
   }
 
   public saveBestScore() {

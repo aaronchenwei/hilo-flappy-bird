@@ -7,7 +7,7 @@ import OverScene from './OverScene';
 import ReadyScene from './ReadyScene';
 
 export default class Game {
-  public properties: Hilo.IStageProperties;
+  public properties: any;
 
   public width: number = 0;
   public height: number = 0;
@@ -212,7 +212,7 @@ export default class Game {
     if (this.bird.isDead) {
       this.gameOver();
     } else {
-      this.currentScore.text = String(this.calcScore());
+      this.currentScore.setText(String(this.calcScore()));
       // 碰撞检测
       if (this.holdbacks.checkCollision(this.bird)) {
         this.gameOver();
@@ -258,8 +258,7 @@ export default class Game {
   public calcScore() {
     const count = this.holdbacks.calcPassThrough(this.bird.x);
     this.score = count;
-
-    return this.score;
+    return count;
   }
 
   public saveBestScore() {

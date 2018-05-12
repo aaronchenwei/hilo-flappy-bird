@@ -6,7 +6,6 @@ import globalStyles from './styles/index';
 
 const renderApp = () => {
   globalStyles();
-
   ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
 };
 

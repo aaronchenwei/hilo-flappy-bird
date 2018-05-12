@@ -33,7 +33,7 @@ export default class Game {
 
   public init() {
     this.asset = new Asset();
-    this.asset.on('complete', e => {
+    this.asset.on('complete', (e: any) => {
       this.asset.off('complete');
       this.initStage();
     });
@@ -185,7 +185,7 @@ export default class Game {
     // 绑定开始按钮事件
     this.gameOverScene
       .getChildById('start')
-      .on((Hilo.event as Hilo.EventType).POINTER_START, e => {
+      .on((Hilo.event as Hilo.EventType).POINTER_START, (e: any) => {
         if (e.stopImmediatePropagation) {
           e.stopImmediatePropagation();
         }
@@ -193,7 +193,7 @@ export default class Game {
       });
   }
 
-  public onUserInput(e) {
+  public onUserInput(e: any) {
     if (this.state !== 'over') {
       // 启动游戏场景
       if (this.state !== 'playing') {
@@ -204,7 +204,7 @@ export default class Game {
     }
   }
 
-  public onUpdate(delta) {
+  public onUpdate(delta: any) {
     if (this.state === 'ready') {
       return;
     }

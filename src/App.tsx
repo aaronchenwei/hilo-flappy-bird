@@ -7,7 +7,7 @@ class App extends React.Component {
   public gameContainer: any;
 
   private refHandler = {
-    gameContainer: ref => {
+    gameContainer: (ref: any) => {
       this.gameContainer = ref;
     },
   };

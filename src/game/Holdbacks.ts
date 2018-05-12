@@ -15,7 +15,7 @@ export default class Holdbacks extends Hilo.Container {
 
   public moveTween: Hilo.Tween;
 
-  constructor(properties) {
+  constructor(properties: any) {
     super(properties);
     merge(this, properties);
 
@@ -46,7 +46,7 @@ export default class Holdbacks extends Hilo.Container {
     // );
   }
 
-  public createHoses(image) {
+  public createHoses(image: any) {
     for (let i = 0; i < this.numHoses; i += 1) {
       const downHose = new Hilo.Bitmap({
         image,
@@ -86,7 +86,7 @@ export default class Holdbacks extends Hilo.Container {
     }
   }
 
-  public placeHose(down, up, index) {
+  public placeHose(down: any, up: any, index: any) {
     // 下面障碍在y轴的最上的位置
     const downMinY = this.groundY - down.height + this.hoseSpacingY;
     // 下面障碍在y轴的最下的位置
@@ -156,7 +156,7 @@ export default class Holdbacks extends Hilo.Container {
     }
   }
 
-  public checkCollision(bird) {
+  public checkCollision(bird: any) {
     for (let i = 0, len = this.children.length; i < len; i += 1) {
       if (bird.hitTestObject(this.children[i], true)) {
         return true;
@@ -165,7 +165,7 @@ export default class Holdbacks extends Hilo.Container {
     return false;
   }
 
-  public calcPassThrough(x) {
+  public calcPassThrough(x: any) {
     let count = 0;
 
     x = -this.x + x;

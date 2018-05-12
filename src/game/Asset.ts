@@ -1,5 +1,4 @@
 import * as Hilo from 'hilojs';
-import EventMixin from 'hilojs/event/EventMixin';
 import mixin from 'lodash-es/mixin';
 
 export default class Asset implements Hilo.EventMixin {
@@ -7,7 +6,7 @@ export default class Asset implements Hilo.EventMixin {
   public ground: object;
   public ready: object;
   public over: object;
-  public numberGlyphs;
+  public numberGlyphs: any;
   public holdback: object;
   public birdAtlas: Hilo.TextureAtlas;
   public queue: Hilo.LoadQueue;
@@ -21,6 +20,7 @@ export default class Asset implements Hilo.EventMixin {
   public fire: (type: string, detail: object) => boolean;
 
   constructor() {
+    const EventMixin = require('hilojs/event/EventMixin');
     mixin(this, EventMixin);
   }
 

@@ -2,13 +2,13 @@ import * as Hilo from 'hilojs';
 import merge from 'lodash-es/merge';
 
 export default class OverScene extends Hilo.Container {
-  constructor(properties) {
+  constructor(properties: any) {
     super(properties);
     merge(this, properties);
     this.init(properties);
   }
 
-  public init(properties) {
+  public init(properties: any) {
     const board = new Hilo.Bitmap({
       id: 'board',
       image: properties.image,

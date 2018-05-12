@@ -16,7 +16,7 @@ export default class Bird extends Hilo.Sprite {
 
   public tween: any[] | Hilo.Tween;
 
-  constructor(properties) {
+  constructor(properties: any) {
     super(properties);
     merge(this, properties);
 

@@ -1,7 +1,7 @@
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import styledSanitize from 'styled-sanitize';
 
-export default () => injectGlobal`
+const GlobalStyle = createGlobalStyle`
   ${styledSanitize}
 
   html,
@@ -19,3 +19,5 @@ export default () => injectGlobal`
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Source Han Sans CN", "Source Han Sans SC", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
   }
 `;
+
+export default GlobalStyle;
